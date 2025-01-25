@@ -1,9 +1,10 @@
-package ru.javamentor.spring_boot.service;
+package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.javamentor.spring_boot.dao.UserDAOImpl;
-import ru.javamentor.spring_boot.model.User;
+import ru.kata.spring.boot_security.demo.dao.UserDAOImpl;
+
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 
@@ -32,12 +33,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(int id) {
+    public User getById(Long id) {
         return userDAO.getById(id);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         userDAO.delete(id);
     }
 }

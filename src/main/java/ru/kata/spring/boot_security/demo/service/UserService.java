@@ -1,8 +1,6 @@
-package ru.javamentor.spring_boot.service;
+package ru.kata.spring.boot_security.demo.service;
 
-
-import ru.javamentor.spring_boot.model.User;
-
+import ru.kata.spring.boot_security.demo.model.User;
 import java.util.List;
 
 public interface UserService {
@@ -10,7 +8,7 @@ public interface UserService {
     void add(User User);
 
     void edit(User User);
-    User getById(int id);
+    User getById(Long id);
 
-    void delete(int id);
+    void delete(Long id);
 }

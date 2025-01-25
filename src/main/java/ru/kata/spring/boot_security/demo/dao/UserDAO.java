@@ -1,7 +1,6 @@
-package ru.javamentor.spring_boot.dao;
+package ru.kata.spring.boot_security.demo.dao;
 
-
-import ru.javamentor.spring_boot.model.User;
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 
@@ -9,6 +8,6 @@ public interface UserDAO {
     List<User> getAll();
     void add(User user);
     void edit(User user);
-    User getById(int id);
-    void delete(int id);
+    User getById(Long id);
+    void delete(Long id);
 }

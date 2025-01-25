@@ -1,11 +1,10 @@
-package ru.javamentor.spring_boot.dao;
+package ru.kata.spring.boot_security.demo.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
-import ru.javamentor.spring_boot.model.User;
+import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -33,13 +32,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getById(int id) {
+    public User getById(Long id) {
         return entityManager.find(User.class, id);
     }
 
     @Override
     @Transactional
-    public void delete(int id){
+    public void delete(Long id){
         entityManager.remove(getById(id));
     }
 }
