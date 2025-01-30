@@ -7,18 +7,17 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.tUserService;
+import ru.kata.spring.boot_security.demo.service.UserDetails;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final tUserService tUserService;
+    private final UserDetails UserDetails;
 
     @Autowired
-    public WebSecurityConfig(tUserService tUserService) {
-        this.tUserService = tUserService;
+    public WebSecurityConfig(UserDetails UserDetails) {
+        this.UserDetails = UserDetails;
     }
 
     @Autowired
@@ -45,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider (PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        daoAuthenticationProvider.setUserDetailsService(tUserService);
+        daoAuthenticationProvider.setUserDetailsService(UserDetails);
         return daoAuthenticationProvider;
     }
 }

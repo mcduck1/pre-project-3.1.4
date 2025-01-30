@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.service.UserService;
-import ru.kata.spring.boot_security.demo.service.tUserService;
+import ru.kata.spring.boot_security.demo.service.UserDetails;
 import ru.kata.spring.boot_security.demo.model.User;
 
 
@@ -16,17 +16,17 @@ import java.util.List;
 public class HelloController {
 
 	private final UserService userServiceImpl;
-	private final tUserService tUserService;
+	private final UserDetails UserDetails;
 
 	@Autowired
-	public HelloController(UserService userServiceImpl, tUserService tUserService) {
+	public HelloController(UserService userServiceImpl, UserDetails UserDetails) {
 		this.userServiceImpl = userServiceImpl;
-		this.tUserService = tUserService;
+		this.UserDetails = UserDetails;
 	}
 
 	@GetMapping(value = "/admin")
 	public String allUsers(Model model) {
-		List<User> userList = userServiceImpl.getAll();
+		List<User> userList = userServiceImpl.findAll();
 		model.addAttribute("users", userList);
 		return "userlist";
 	}
@@ -38,13 +38,13 @@ public class HelloController {
 
 	@PostMapping()
 	public String add(@ModelAttribute ("user") User user) {
-		userServiceImpl.add(user);
+		userServiceImpl.save(user);
 		return "redirect:/admin";
 	}
 
 	@GetMapping("admin/edit/{id}")
 	public String editPage (Model model, @PathVariable("id") Long id) {
-		model.addAttribute("user", userServiceImpl.getById(id));
+		model.addAttribute("user", userServiceImpl.findById(id));
 		return "edit";
 	}
 
@@ -67,7 +67,7 @@ public class HelloController {
 
 	@GetMapping("/user")
 	public String showUserProfile(Principal principal, Model model) {
-		User user = tUserService.findByUsername(principal.getName());
+		User user = UserDetails.findByUsername(principal.getName());
 		model.addAttribute("user", user);
 		return "userProfile";
 	}
