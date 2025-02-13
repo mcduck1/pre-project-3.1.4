@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Admin's page</title>
+    <style>
+        .dark-grey-bg {
+            background-color: #333;
+            padding: 10px;
+        }
+
+        .white-text {
+            color: white;
+            font-size: 1.6rem;
+        }
+
+        .logout-link {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+
+        .admin-email {
+            font-weight: bold;
+        }
+
+        .side-pane {
+            background-color: #f8f9fa;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .panel-link {
+            font-size: 1.1rem;
+            padding: 12px 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .panel-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .active-panel {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .content-pane {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="d-flex justify-content-between align-items-center dark-grey-bg mb-3">
+    <div class="white-text">
+        <span class="admin-email" th:text="${user.email}"></span>
+        <span>with roles: </span>
+        <span th:each="role : ${user.roles}" th:text="${role.name.substring(5)} + ' '"></span>
+    </div>
+    <div>
+        <form class="form-signin" method="post" action="/logout">
+            <a class="logout-link white-text" onclick="this.closest('form').submit();">Logout</a>
+        </form>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Pane: Roles List -->
+        <div class="col-md-3 side-pane">
+            <div class="list-group">
+                <!-- Display Roles -->
+                <div th:each="role : ${user.roles}">
+                    <a th:href="@{/panel?role={role}(role=${role.name.substring(5)})}"
+                       class="list-group-item list-group-item-action panel-link"
+                       th:classappend="${selectedRole == role.name.substring(5)} ? 'active-panel' : ''"
+                       th:text="${role.name.substring(5)}">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Content Area -->
+        <div class="col-md-9 content-pane">
+            <!-- Admin Panel -->
+            <div th:if="${selectedRole == 'ADMIN'}">
+                <h3>Admin Panel</h3>
+                <!-- Add User Button -->
+                <div class="mb-4">
+                    <a href="/admin/add" class="btn btn-success">Add New User</a>
+                </div>
+                <!-- Users Table -->
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <span th:each="role : ${user.roles}"
+                                  th:text="${role.name.substring(5)} + ' '"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/edit/{id}(id=${user.id})}"
+                               class="btn btn-sm btn-primary me-2">Edit</a>
+                            <a th:href="@{/admin/delete/{id}(id=${user.id})}"
+                               class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- User Panel -->
+            <div th:if="${selectedRole == 'USER'}">
+                <h3>User Panel</h3>
+                <!-- User Details -->
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <span th:each="role : ${user.roles}"
+                                  th:text="${role.name.substring(5)} + ' '"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -36,8 +36,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .loginPage("/login")
                         .successHandler(new SuccessUserHandler())
                 .and()
-                    .logout()
-                    .logoutSuccessUrl("/");
+                .logout()
+                    .logoutUrl("/logout") // Logout URL
+                    .logoutSuccessUrl("/login?logout") // Redirect after logout
+                    .permitAll();
     }
 
     @Bean

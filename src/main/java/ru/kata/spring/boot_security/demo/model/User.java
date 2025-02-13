@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +26,7 @@ public class User implements UserDetails {
     private String password;
     @Transient
     private String passwordConfirm;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
@@ -113,6 +116,9 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public List<String> getStringRoles (Set<Role> roles) {
+        return Collections.singletonList(roles.toString());
+    }
 
     public void setUsername(String username) {
         this.username = username;
