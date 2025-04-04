@@ -3,24 +3,27 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 
-@org.springframework.web.bind.annotation.RestController
-@RequestMapping("/api")
-public class RestController {
+@RestController
+@RequestMapping("/api/admin")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminRestController {
 
     private final UserServiceImpl userService;
     private final RoleRepository roleRepository;
 
     @Autowired
-    public RestController(UserServiceImpl userService, RoleRepository roleRepository) {
+    public AdminRestController(UserServiceImpl userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
     }
@@ -33,7 +36,7 @@ public class RestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("users/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> getUser (@PathVariable Long id) {
         User user = userService.findById(id);
         return user != null
@@ -41,9 +44,9 @@ public class RestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("roles")
+    @GetMapping("/roles")
     public ResponseEntity<List<Role>> getRoles () {
-        return new ResponseEntity<>(roleRepository.findAll(), HttpStatus.OK);
+        return ResponseEntity.ok(roleRepository.findAll());
     }
 
     @PostMapping("/users")
@@ -52,9 +55,10 @@ public class RestController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/users")
-    public ResponseEntity<HttpStatus> editUser(@RequestBody User user) {
-        userService.edit(user);
+    @PutMapping("/users/{id}")
+    public ResponseEntity<HttpStatus> editUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        updatedUser.setId(id);
+        userService.edit(updatedUser);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
